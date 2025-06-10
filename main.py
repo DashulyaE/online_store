@@ -1,4 +1,5 @@
 # Импорт встроенной библиотеки для работы веб-сервера
+import urllib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # Для начала определим настройки запуска
@@ -19,6 +20,20 @@ class MyServer(BaseHTTPRequestHandler):
             data = file.read()
         self.wfile.write(bytes(data, "utf-8"))
 
+    def do_POST(self):
+        """ Метод для обработки входящих Post-запросов """
+        content_length = int(self.headers['Content-Length'])
+        # Читаем данные
+        post_data = self.rfile.read(content_length)
+        # Распарсиваем данные
+        parsed_data = urllib.parse.parse_qs(post_data.decode('utf-8'))
+        user_input = parsed_data.get('message', [''])
+        print("Полученные данные:", user_input)
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
+        response = 'Данные получены и выведены в консоль'
+        self.wfile.write(response.encode('utf-8'))
 
 if __name__ == "__main__":
     # Инициализация веб-сервера, который будет по заданным параметрах в сети
