@@ -28,7 +28,11 @@ class MyServer(BaseHTTPRequestHandler):
         # Распарсиваем данные
         parsed_data = urllib.parse.parse_qs(post_data.decode('utf-8'))
         user_input = parsed_data.get('message', [''])
-        print("Полученные данные:", user_input)
+        user_name = parsed_data.get('name', [''])[0]
+        user_email = parsed_data.get('email', [''])[0]
+        print("Имя:", user_name)
+        print("Email:", user_email)
+        print("Сообщение:", user_input)
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
